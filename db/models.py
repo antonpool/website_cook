@@ -15,24 +15,29 @@ class Category(MPTTModel):
         blank=True, #не обязательно при заполнении
     )
 
-
     class MPTTMeta:
         order_insertion_by = ['name']
 
+    def __str__(self):
+        return self.name
 
 class Tag(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100) #строка для ссылки
 
+    def __str__(self):
+        return self.name
+    
+
 class Post(models.Model):
-    autor = models.ForeignKey(
+    author = models.ForeignKey(
         User, #использование модели для подписи статьи этого пользователя
         related_name='posts',
         on_delete=models.CASCADE #удаление пользователя удалит все статьи? или все пометки автора
     )
     title = models.CharField(max_length=200)
     image = models.ImageField(upload_to='articals')
-    text: models.TextField()
+    text = models.TextField(null = True)
     category = models.ForeignKey(
         Category,
         related_name='post',
@@ -41,6 +46,9 @@ class Post(models.Model):
     )
     tags = models.ManyToManyField(Tag, related_name = 'posts')
     cteate_at = models.DateField()
+
+    def __str__(self):
+        return self.title
 
 
 class Recipe(models.Model):
@@ -68,3 +76,4 @@ class Commend(models.Model):
         Post,
         related_name = 'comment',
         on_delete = models.CASCADE)
+   
