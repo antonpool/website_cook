@@ -16,3 +16,4 @@ db/migrations/__pycache__/0002_tag_category_post_commend_recipe_delete_genre.cpy
 db/migrations/__pycache__/0003_post_text.cpython-310.pyc
 db/migrations/__pycache__/0004_rename_autor_post_author.cpython-310.pyc
 main/__pycache__/views.cpython-310.pyc
+main/__pycache__/views.cpython-310.pyc
