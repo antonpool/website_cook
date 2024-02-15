@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User #импорт пользователя для подписи автора статьи
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey # строит бинарные деревья
-
+from django.urls import reverse
 
 # Create your models here.
 class Category(MPTTModel):
@@ -36,7 +36,7 @@ class Post(models.Model):
         on_delete=models.CASCADE #удаление пользователя удалит все статьи? или все пометки автора
     )
     title = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='articals')
+    image = models.ImageField(upload_to='articals/')
     text = models.TextField(null = True)
     category = models.ForeignKey(
         Category,
@@ -46,9 +46,16 @@ class Post(models.Model):
     )
     tags = models.ManyToManyField(Tag, related_name = 'posts')
     cteate_at = models.DateField()
+    slug = models.SlugField(max_length=200, default='www')
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse("post_single", kwargs={"slug": self.category.slug, "post_slug":self.slug})
+    
+    def get_recipes(self):
+        return self.recipes.all()
 
 
 class Recipe(models.Model):
@@ -60,14 +67,14 @@ class Recipe(models.Model):
     directions = models.TextField()
     post = models.ForeignKey(
         Post,
-        related_name = 'recipe',
+        related_name = 'recipes',
         on_delete = models.SET_NULL,
         default=0,
         null = True,
         blank = True,
     )
 
-class Commend(models.Model):
+class Comment(models.Model):
     name = models.CharField(max_length=50)
     email = models.CharField(max_length=100)
     wedsite = models.CharField(max_length=150)
